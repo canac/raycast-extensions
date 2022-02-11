@@ -1,0 +1,44 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "new-journal-entry",
+  "title": "New journal entry",
+  "description": "Create a new journal entry and open it",
+  "icon": "command-icon.png",
+  "author": "canac",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "new",
+      "title": "New journal entry",
+      "description": "Create a new journal entry as a markdown file and open it",
+      "mode": "view"
+    },
+    {
+      "name": "tags",
+      "title": "Journal tags",
+      "description": "Pick an existing journal tag",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.28.0",
+    "date-fns": "^2.28.0",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^17.0.17",
+    "@types/react": "^17.0.39",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "@typescript-eslint/parser": "^5.11.0",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
+    "react-devtools": "^4.23.0",
+    "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "lint": "ray lint"
+  }
+}
