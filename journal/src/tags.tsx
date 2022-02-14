@@ -1,3 +1,4 @@
+import { Clipboard } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { List, showToast, Toast, LocalStorage, ActionPanel, Action, clearSearchBar } from "@raycast/api";
 import superjson from "superjson";
@@ -14,6 +15,16 @@ export default function Command() {
     } catch (err: unknown) {
       showToast(Toast.Style.Failure, "Error", err instanceof Error ? err.message : JSON.stringify(err));
     }
+  }
+
+  async function onCopy(tag: string) {
+    Clipboard.copy(`${tag} `);
+    clearSearchBar();
+  }
+
+  function onPaste(tag: string) {
+    Clipboard.paste(`${tag} `);
+    clearSearchBar();
   }
 
   useEffect(() => {
@@ -42,8 +53,8 @@ export default function Command() {
           key={tag}
           actions={
             <ActionPanel>
-              <Action.Paste title="Paste tag" content={`${tag} `} onPaste={() => clearSearchBar()} />
-              <Action.CopyToClipboard title="Copy tag" content={`${tag} `} onCopy={() => clearSearchBar()} />
+              <Action title="Paste tag" onAction={() => onPaste(tag)} />
+              <Action title="Copy tag" onAction={() => onCopy(tag)} />
               <Action
                 title="Refresh tags"
                 shortcut={{ modifiers: ["cmd", "shift"], key: "r" }}
