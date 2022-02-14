@@ -40,7 +40,7 @@ export async function createJournalEntry(entry: JournalEntry) {
 title: '${wordFormattedDate} #${entry.index}'
 date: ${numberFormattedDate}
 tags: ` +
-    `
+      `
 ---
 
 Jesus, `
@@ -56,10 +56,10 @@ export async function getTags(): Promise<string[]> {
       continue;
     }
 
-    const post = await readFile(join(postsDir, filename), 'utf8');
+    const post = await readFile(join(postsDir, filename), "utf8");
     const matches = /---\n[\s\S]*tags: ?(.*)[\s\S]*\n---\n/g.exec(post);
     if (!matches) {
-      throw new Error(`Could not extract tags from ${filename}`)
+      throw new Error(`Could not extract tags from ${filename}`);
     }
 
     const tags = matches[1];
@@ -69,9 +69,12 @@ export async function getTags(): Promise<string[]> {
     }
 
     // Ignore tag case
-    tags.toLowerCase().split(' ').forEach((tag) => {
-      usedTags.add(tag);
-    });
+    tags
+      .toLowerCase()
+      .split(" ")
+      .forEach((tag) => {
+        usedTags.add(tag);
+      });
   }
 
   // Sort tags alphabetically
