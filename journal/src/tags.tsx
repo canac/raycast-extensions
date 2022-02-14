@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, showToast, Toast, LocalStorage, ActionPanel, Action } from "@raycast/api";
+import { List, showToast, Toast, LocalStorage, ActionPanel, Action, clearSearchBar } from "@raycast/api";
 import superjson from "superjson";
 import { getTags } from "./lib";
 
@@ -42,8 +42,8 @@ export default function Command() {
           key={tag}
           actions={
             <ActionPanel>
-              <Action.Paste title="Paste tag" content={`${tag} `} />
-              <Action.CopyToClipboard title="Copy tag" content={`${tag} `} />
+              <Action.Paste title="Paste tag" content={`${tag} `} onPaste={() => clearSearchBar()} />
+              <Action.CopyToClipboard title="Copy tag" content={`${tag} `} onCopy={() => clearSearchBar()} />
               <Action
                 title="Refresh tags"
                 shortcut={{ modifiers: ["cmd", "shift"], key: "r" }}
