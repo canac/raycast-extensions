@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "new-journal-entry",
-  "title": "New journal entry",
-  "description": "Create a new journal entry and open it",
+  "name": "journal",
+  "title": "Journal",
+  "description": "Shortcuts for managing journal entries",
   "icon": "command-icon.png",
   "author": "canac",
   "license": "MIT",
