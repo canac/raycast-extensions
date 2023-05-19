@@ -39,7 +39,7 @@ export default function Command() {
       // Load the tags
       refreshTags();
     });
-  });
+  }, []);
 
   if (tags === null) {
     return <List isLoading />;
