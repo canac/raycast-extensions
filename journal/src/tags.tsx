@@ -1,7 +1,6 @@
 import { Clipboard } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { List, showToast, Toast, LocalStorage, ActionPanel, Action, clearSearchBar } from "@raycast/api";
-import superjson from "superjson";
 import { getTags } from "./lib";
 
 export default function Command() {
@@ -11,7 +10,7 @@ export default function Command() {
     try {
       const tags = await getTags();
       setTags(tags);
-      LocalStorage.setItem("tags", superjson.stringify(tags));
+      LocalStorage.setItem("tags", JSON.stringify(tags));
     } catch (err: unknown) {
       showToast(Toast.Style.Failure, "Error", err instanceof Error ? err.message : JSON.stringify(err));
     }
@@ -32,7 +31,7 @@ export default function Command() {
     LocalStorage.getItem("tags").then((tags) => {
       if (typeof tags === "string") {
         // Use the cached tags
-        setTags(superjson.parse(tags) as string[]);
+        setTags(JSON.parse(tags) as string[]);
         return;
       }
 
