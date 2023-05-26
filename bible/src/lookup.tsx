@@ -89,7 +89,7 @@ export default function Command() {
       actions={
         <ActionPanel>
           <Action
-            title="Copy passage"
+            title="Copy Passage"
             shortcut={{ modifiers: ["cmd", "opt"], key: "c" }}
             onAction={async () => {
               try {
@@ -102,7 +102,7 @@ export default function Command() {
             }}
           />
           <Action
-            title="Paste passage"
+            title="Paste Passage"
             shortcut={{ modifiers: ["cmd", "opt"], key: "v" }}
             onAction={async () => {
               try {
