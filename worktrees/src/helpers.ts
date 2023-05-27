@@ -16,30 +16,40 @@ async function findReposWithWorktrees(searchDir: string): Promise<string[]> {
 
 export interface Worktree {
   path: string;
-  commit: string;
-  branch: string;
+  commit: string | null;
+  branch: string | null;
   dirty: boolean;
 }
 
 // Find all of the worktrees in a git repo
 async function getRepoWorktrees(repoDir: string): Promise<Worktree[]> {
-  const { stdout } = await exec(`git -C '${repoDir}' worktree list`);
+  const { stdout } = await exec(`git -C '${repoDir}' worktree list --porcelain`);
   const worktrees = stdout
     .trim()
-    .split("\n")
-    .flatMap((line) => {
-      const matches = /^(?<path>\S+) +(?<commit>[0-9a-f]{7}) \[(?<branch>.+)\]$/.exec(line);
-      if (
-        matches?.groups?.path &&
-        matches?.groups?.commit &&
-        matches?.groups?.branch &&
-        matches.groups.path !== repoDir
-      ) {
-        return [
-          { path: matches.groups.path, commit: matches.groups.commit, branch: matches.groups.branch, dirty: false },
-        ];
+    .split("\n\n")
+    .map((section) => {
+      let worktree: string | null = null;
+      let commit: string | null = null;
+      let branch: string | null = null;
+      section.split("\n").forEach((line) => {
+        if (line.startsWith("worktree ")) {
+          worktree = line.slice(9);
+        } else if (line.startsWith("HEAD ")) {
+          commit = line.slice(5);
+        } else if (line.startsWith("branch refs/heads/")) {
+          branch = line.slice(18);
+        }
+      });
+
+      if (!worktree) {
+        throw new Error("Missing worktree!");
       }
-      return [];
+      return {
+        path: worktree,
+        commit,
+        branch,
+        dirty: false,
+      };
     });
   return await Promise.all(
     worktrees.map(async (worktree) => {

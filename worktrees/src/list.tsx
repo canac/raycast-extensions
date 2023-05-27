@@ -36,7 +36,7 @@ export default function Command() {
               key={worktree.branch}
               icon={Icon.Folder}
               title={relative(rootDir, worktree.path)}
-              subtitle={`${worktree.branch} @ ${worktree.commit}`}
+              subtitle={`${worktree.branch ?? "detached"} @ ${worktree.commit?.slice(0, 7) ?? "none"}`}
               accessories={worktree.dirty ? [{ text: { value: "Dirty", color: Color.Yellow } }] : undefined}
               actions={
                 <ActionPanel>
