@@ -7,11 +7,18 @@ const exec = promisify(childProcess.exec);
 
 // Find all of the repos in searchDir that contain worktrees
 async function findReposWithWorktrees(searchDir: string): Promise<string[]> {
-  const { stdout } = await exec(`find '${searchDir}' -type d -path '*/.git/worktrees' -maxdepth 3`);
+  // Use fd if possible and fallback to find
+  const { stdout } = await exec(`fd -pgH '**/.git/worktrees' '${searchDir}'`).catch((err) => {
+    if (err instanceof Error && (err as Error & { code: number }).code === 127) {
+      return exec(`find '${searchDir}' -type d -path '*/.git/worktrees' -maxdepth 3`);
+    }
+    throw err;
+  });
+
   return stdout
     .trim()
     .split("\n")
-    .map((line) => line.slice(0, -"/.git/worktrees".length));
+    .map((line) => line.slice(0, line.lastIndexOf("/.git/worktrees")));
 }
 
 export interface Worktree {
