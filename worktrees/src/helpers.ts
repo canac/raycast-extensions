@@ -63,14 +63,9 @@ async function getRepoWorktrees(repoDir: string): Promise<Worktree[]> {
   );
 }
 
-// Remove a git worktree, returning a promise that resolves to true if it was successfully removed
-export async function removeWorktree(repoDir: string, worktreeDir: string): Promise<boolean> {
-  try {
-    await exec(`git -C '${repoDir}' worktree remove '${worktreeDir}'`);
-    return true;
-  } catch (err) {
-    return false;
-  }
+// Remove a git worktree, throwing an exception if it failed
+export async function removeWorktree(repoDir: string, worktreeDir: string): Promise<void> {
+  await exec(`git -C '${repoDir}' worktree remove '${worktreeDir}'`);
 }
 
 type WorktreesMap = Record<string, Worktree[]>;

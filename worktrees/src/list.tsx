@@ -1,7 +1,6 @@
 import { relative } from "node:path";
-import { Action, ActionPanel, Alert, Color, Icon, List, confirmAlert, showToast } from "@raycast/api";
-import { showHUD } from "@raycast/api";
-import { formatPath, getRootDir, removeWorktree, useWorktrees, Worktree } from "./helpers";
+import { Action, ActionPanel, Alert, Color, Icon, List, Toast, confirmAlert, showToast } from "@raycast/api";
+import { Worktree, formatPath, getRootDir, removeWorktree, useWorktrees } from "./helpers";
 
 export default function Command() {
   const rootDir = getRootDir();
@@ -20,11 +19,16 @@ export default function Command() {
       return;
     }
 
-    if (await removeWorktree(repo, worktree.path)) {
+    try {
+      await removeWorktree(repo, worktree.path);
       revalidate();
-      await showToast({ title: "Removed worktree!", message: formatPath(worktree.path) });
-    } else {
-      showHUD("Could not remove worktree");
+      await showToast({ title: "Removed worktree", message: formatPath(worktree.path) });
+    } catch (err) {
+      await showToast({
+        title: "Could not remove worktree!",
+        message: err instanceof Error ? err.message : undefined,
+        style: Toast.Style.Failure,
+      });
     }
   }
 
