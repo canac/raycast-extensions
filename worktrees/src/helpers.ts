@@ -94,10 +94,10 @@ export function getRootDir(): string {
   return rootDir.replace("~", home);
 }
 
-// Prettify a repo dir for display in the UI
-export function formatRepoDir(repoDir: string): string {
-  if (repoDir.startsWith(home + "/")) {
-    return repoDir.replace(home + "/", "~/");
+// Prettify a path for display in the UI
+export function formatPath(path: string): string {
+  if (path.startsWith(home + "/")) {
+    return path.replace(home + "/", "~/");
   }
-  return repoDir;
+  return path;
 }

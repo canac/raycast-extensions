@@ -1,7 +1,7 @@
 import { relative } from "node:path";
-import { Action, ActionPanel, Alert, Color, Icon, List, confirmAlert } from "@raycast/api";
+import { Action, ActionPanel, Alert, Color, Icon, List, confirmAlert, showToast } from "@raycast/api";
 import { showHUD } from "@raycast/api";
-import { getRootDir, formatRepoDir, removeWorktree, useWorktrees, Worktree } from "./helpers";
+import { formatPath, getRootDir, removeWorktree, useWorktrees, Worktree } from "./helpers";
 
 export default function Command() {
   const rootDir = getRootDir();
@@ -22,6 +22,7 @@ export default function Command() {
 
     if (await removeWorktree(repo, worktree.path)) {
       revalidate();
+      await showToast({ title: "Removed worktree!", message: formatPath(worktree.path) });
     } else {
       showHUD("Could not remove worktree");
     }
@@ -30,7 +31,7 @@ export default function Command() {
   return (
     <List isLoading={isLoading}>
       {Object.entries(worktrees ?? {}).map(([repo, worktrees]) => (
-        <List.Section title={formatRepoDir(repo)} key={repo}>
+        <List.Section title={formatPath(repo)} key={repo}>
           {worktrees.map((worktree) => (
             <List.Item
               key={worktree.branch}
