@@ -50,7 +50,8 @@ async function getRepoWorktrees(repoDir: string): Promise<Worktree[]> {
         branch,
         dirty: false,
       };
-    });
+    })
+    .filter(({ path }) => path !== repoDir);
   return await Promise.all(
     worktrees.map(async (worktree) => {
       const { stdout } = await exec(`git -C '${worktree.path}' status -s`);
