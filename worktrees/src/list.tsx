@@ -11,11 +11,16 @@ import {
   getPreferenceValues,
   showToast,
 } from "@raycast/api";
-import { Worktree, formatPath, getRootDir, removeWorktree, useWorktrees } from "./helpers";
+import { useCachedPromise } from "@raycast/utils";
+import { Worktree, formatPath, getRootDir, getWorktrees, removeWorktree } from "./helpers";
 
 export default function Command() {
   const rootDir = getRootDir();
-  const { data: worktrees, isLoading, revalidate } = useWorktrees(rootDir);
+  const {
+    data: worktrees,
+    isLoading,
+    revalidate,
+  } = useCachedPromise((searchDir) => getWorktrees(searchDir), [rootDir]);
 
   async function handleRemove(repo: string, worktree: Worktree) {
     if (

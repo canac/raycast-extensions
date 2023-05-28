@@ -2,7 +2,6 @@ import childProcess from "node:child_process";
 import { homedir } from "node:os";
 import { promisify } from "node:util";
 import { getPreferenceValues } from "@raycast/api";
-import { useCachedPromise } from "@raycast/utils";
 
 const exec = promisify(childProcess.exec);
 
@@ -117,15 +116,10 @@ export async function removeWorktree(repoDir: string, worktreeDir: string): Prom
 
 type WorktreesMap = Record<string, Worktree[]>;
 
-export function useWorktrees(searchDir: string): ReturnType<typeof useCachedPromise<() => Promise<WorktreesMap>>> {
-  return useCachedPromise(
-    async (searchDir): Promise<WorktreesMap> => {
-      const repos = await findReposWithWorktrees(searchDir);
-      const worktrees = await Promise.all(repos.map(async (repo) => [repo, await getRepoWorktrees(repo)] as const));
-      return Object.fromEntries(worktrees);
-    },
-    [searchDir]
-  );
+export async function getWorktrees(searchDir: string): Promise<WorktreesMap> {
+  const repos = await findReposWithWorktrees(searchDir);
+  const worktrees = await Promise.all(repos.map(async (repo) => [repo, await getRepoWorktrees(repo)] as const));
+  return Object.fromEntries(worktrees);
 }
 
 const home = `${homedir()}/`;
