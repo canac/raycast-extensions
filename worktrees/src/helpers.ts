@@ -6,6 +6,22 @@ import { useCachedPromise } from "@raycast/utils";
 
 const exec = promisify(childProcess.exec);
 
+// Find all of the repos in searchDir
+export async function findRepos(searchDir: string): Promise<string[]> {
+  // Use fd if possible and fallback to find
+  const { stdout } = await exec(`fd -pgH '**/.git' '${searchDir}'`).catch((err) => {
+    if (err instanceof Error && (err as Error & { code: number }).code === 127) {
+      return exec(`find '${searchDir}' -type d -path '*/.git' -maxdepth 2`);
+    }
+    throw err;
+  });
+
+  return stdout
+    .trim()
+    .split("\n")
+    .map((line) => line.slice(0, line.lastIndexOf("/.git")));
+}
+
 // Find all of the repos in searchDir that contain worktrees
 async function findReposWithWorktrees(searchDir: string): Promise<string[]> {
   // Use fd if possible and fallback to find
@@ -69,6 +85,29 @@ async function getRepoWorktrees(repoDir: string): Promise<Worktree[]> {
       };
     })
   );
+}
+
+// Determine the default branch of a repo
+export async function getDefaultBranch(repoDir: string): Promise<string> {
+  const { stdout } = await exec(`git -C '${repoDir}' remote show origin`);
+  for (const rawLine of stdout.trim().split("\n")) {
+    const line = rawLine.trim();
+    if (line.startsWith("HEAD branch: ")) {
+      return line.slice(13);
+    }
+  }
+
+  throw new Error("Could not determine default branch name");
+}
+
+// Add a new git worktree
+export async function addWorktree(
+  repoDir: string,
+  worktreeDir: string,
+  branch: string,
+  defaultBranch: string
+): Promise<void> {
+  await exec(`git -C '${repoDir}' worktree add '${worktreeDir}' -b '${branch}' '${defaultBranch}'`);
 }
 
 // Remove a git worktree, throwing an exception if it failed
