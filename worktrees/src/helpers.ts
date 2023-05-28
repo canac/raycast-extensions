@@ -1,4 +1,5 @@
 import childProcess from "node:child_process";
+import { homedir } from "node:os";
 import { promisify } from "node:util";
 import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
@@ -88,18 +89,18 @@ export function useWorktrees(searchDir: string): ReturnType<typeof useCachedProm
   );
 }
 
-const home = process.env.HOME ?? "";
+const home = `${homedir()}/`;
 
 // Return the directory containing the git repos specified in preferences
 export function getRootDir(): string {
   const { rootDir } = getPreferenceValues<ExtensionPreferences>();
-  return rootDir.replace("~", home);
+  return rootDir.replace("~/", home);
 }
 
 // Prettify a path for display in the UI
 export function formatPath(path: string): string {
-  if (path.startsWith(home + "/")) {
-    return path.replace(home + "/", "~/");
+  if (path.startsWith(home)) {
+    return path.replace(home, "~/");
   }
   return path;
 }
