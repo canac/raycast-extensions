@@ -1,5 +1,16 @@
 import { relative } from "node:path";
-import { Action, ActionPanel, Alert, Color, Icon, List, Toast, confirmAlert, showToast } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  Alert,
+  Color,
+  Icon,
+  List,
+  Toast,
+  confirmAlert,
+  getPreferenceValues,
+  showToast,
+} from "@raycast/api";
 import { Worktree, formatPath, getRootDir, removeWorktree, useWorktrees } from "./helpers";
 
 export default function Command() {
@@ -32,6 +43,8 @@ export default function Command() {
     }
   }
 
+  const { editorApp, terminalApp } = getPreferenceValues<ExtensionPreferences>();
+
   return (
     <List isLoading={isLoading}>
       {Object.entries(worktrees ?? {}).map(([repo, worktrees]) => (
@@ -46,20 +59,23 @@ export default function Command() {
               actions={
                 <ActionPanel>
                   <Action.Open
-                    title="Open in VS Code"
-                    icon={Icon.Pencil}
+                    // eslint-disable-next-line @raycast/prefer-title-case
+                    title={`Open in ${editorApp.name}`}
+                    icon={{ fileIcon: editorApp.path }}
                     target={worktree.path}
-                    application="com.microsoft.VSCode"
+                    application={editorApp.bundleId}
                   />
                   <Action.Open
-                    title="Open in iTerm"
-                    icon={Icon.Terminal}
+                    // eslint-disable-next-line @raycast/prefer-title-case
+                    title={`Open in ${terminalApp.name}`}
+                    icon={{ fileIcon: terminalApp.path }}
                     target={worktree.path}
-                    application="com.googlecode.iterm2"
+                    application={terminalApp.bundleId}
                   />
                   {!worktree.dirty && (
                     <Action
                       title="Remove Worktree"
+                      icon={Icon.Trash}
                       shortcut={{ key: "x", modifiers: ["ctrl"] }}
                       style={Action.Style.Destructive}
                       onAction={() => handleRemove(repo, worktree)}

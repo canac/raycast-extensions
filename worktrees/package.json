@@ -21,6 +21,22 @@
       "type": "textfield",
       "required": true,
       "title": "Git repo dir"
+    },
+    {
+      "name": "editorApp",
+      "description": "Preferred editor to open repos in",
+      "type": "appPicker",
+      "required": true,
+      "title": "Preferred editor",
+      "default": "Code"
+    },
+    {
+      "name": "terminalApp",
+      "description": "Preferred terminal to open repos in",
+      "type": "appPicker",
+      "required": true,
+      "title": "Preferred terminal",
+      "default": "Terminal"
     }
   ],
   "dependencies": {
