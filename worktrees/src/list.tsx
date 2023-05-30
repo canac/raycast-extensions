@@ -64,16 +64,12 @@ export default function Command() {
               actions={
                 <ActionPanel>
                   <Action.Open
-                    // TODO: Remove this and the next disable once
-                    // https://github.com/raycast/eslint-plugin/issues/2 is fixed
-                    // eslint-disable-next-line @raycast/prefer-title-case
                     title={`Open in ${editorApp.name}`}
                     icon={{ fileIcon: editorApp.path }}
                     target={worktree.path}
                     application={editorApp.bundleId}
                   />
                   <Action.Open
-                    // eslint-disable-next-line @raycast/prefer-title-case
                     title={`Open in ${terminalApp.name}`}
                     icon={{ fileIcon: terminalApp.path }}
                     target={worktree.path}
