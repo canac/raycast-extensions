@@ -1,22 +1,25 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "worktrees",
-  "title": "Worktrees",
-  "description": "Manage git worktrees",
+  "title": "Git Worktrees",
+  "description": "View, add, and remove git worktrees.",
   "icon": "command-icon.png",
   "author": "canac",
+  "categories": [
+    "Developer Tools"
+  ],
   "license": "MIT",
   "commands": [
     {
-      "name": "list",
-      "title": "List Worktrees",
-      "description": "List and manipulate git worktrees",
+      "name": "view",
+      "title": "View Worktrees",
+      "description": "View and remove git worktrees",
       "mode": "view"
     },
     {
-      "name": "new",
-      "title": "New Worktree",
-      "description": "Create a new git worktree",
+      "name": "add",
+      "title": "Add Worktree",
+      "description": "Add a new git worktree",
       "mode": "view"
     }
   ],
