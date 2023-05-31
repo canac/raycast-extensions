@@ -87,16 +87,9 @@ async function getRepoWorktrees(repoDir: string): Promise<Worktree[]> {
 }
 
 // Determine the default branch of a repo
-export async function getDefaultBranch(repoDir: string): Promise<string> {
-  const { stdout } = await exec(`git -C '${repoDir}' remote show origin`);
-  for (const rawLine of stdout.trim().split("\n")) {
-    const line = rawLine.trim();
-    if (line.startsWith("HEAD branch: ")) {
-      return line.slice(13);
-    }
-  }
-
-  throw new Error("Could not determine default branch name");
+export async function getBranches(repoDir: string): Promise<string[]> {
+  const { stdout } = await exec(`git -C '${repoDir}' branch --format='%(refname:short)'`);
+  return stdout.trim().split("\n");
 }
 
 // Add a new git worktree
