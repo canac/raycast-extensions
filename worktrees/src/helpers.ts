@@ -8,7 +8,9 @@ const exec = promisify(childProcess.exec);
 // Find all of the repos in searchDir
 export async function findRepos(searchDir: string): Promise<string[]> {
   // Use fd if possible and fallback to find
-  const { stdout } = await exec(`fd -pgH '**/.git' '${searchDir}'`).catch((err) => {
+  const { stdout } = await exec(
+    `fd --full-path --glob --hidden --no-ignore --max-depth=2 --type=directory '**/.git' '${searchDir}'`
+  ).catch((err) => {
     if (err instanceof Error && (err as Error & { code: number }).code === 127) {
       return exec(`find '${searchDir}' -type d -path '*/.git' -maxdepth 2`);
     }
